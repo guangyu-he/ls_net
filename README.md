@@ -20,16 +20,21 @@ cross-platform way to inspect your machine's network configuration with simple c
    git clone https://github.com/guangyu-he/ls_net
    cd ls_net
    ```
-2. **Build with Cargo:**
+2. **Build or install with Cargo:**
    ```sh
    cargo build --release
    ```
-3. The binary will be in `target/release/ls_net`.
 
-### install to PATH
+   or
+
+   ```sh
+   cargo install --path .
+   ```
+
+### from git
 
 ```sh
-cargo install --path . # --root /usr/local/bin
+cargo install --git https://github.com/guangyu-he/ls_net
 ```
 
 ## Usage

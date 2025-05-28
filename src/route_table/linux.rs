@@ -1,6 +1,25 @@
 use crate::route_table::{IpVersion, RouteTable, parse_route_line};
 use anyhow::{Result, anyhow};
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+/// Parses the output of the `netstat -rn` command on Linux and returns a
+/// `RouteTable` containing the routes.
+///
+/// The function takes a string slice containing the output of the `netstat -rn`
+/// command and splits it into lines. It then iterates over the lines, parsing
+/// each line with `parse_route_line` and adding the resulting `RouteEntry` to
+/// the `RouteTable`. The `RouteTable` is then returned.
+///
+/// The function skips over empty lines and sections that do not contain the
+/// header line "Destination", which is the header for the IPv4 routes. It also
+/// skips over the header line itself.
+///
+/// If an error occurs while parsing a line, the function returns an error.
+///
+/// # Errors
+///
+/// If an error occurs while parsing a line, the function returns an error.
+/* <<<<<<<<<<  dd2a4b30-e731-4af3-8cc2-4049f6f2a98c  >>>>>>>>>>> */
 pub fn parse_linux_route_output(output: &str) -> Result<RouteTable> {
     let mut route_table = RouteTable::new();
     let lines: Vec<&str> = output.lines().collect();
@@ -29,6 +48,22 @@ pub fn parse_linux_route_output(output: &str) -> Result<RouteTable> {
     Ok(route_table)
 }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    /// Executes the `netstat -rn` command on Linux and parses its output into a
+    /// `RouteTable`.
+    ///
+    /// The function executes the `netstat -rn` command, which prints the system's
+    /// route table to stdout. It then parses the output with
+    /// `parse_linux_route_output` and returns the resulting `RouteTable`.
+    ///
+    /// If an error occurs while executing the command or parsing the output,
+    /// the function returns an error.
+    ///
+    /// # Errors
+    ///
+    /// If an error occurs while executing the command or parsing the output,
+    /// the function returns an error.
+/* <<<<<<<<<<  e2f20dd3-8ef1-4195-8b9c-3c60509fd102  >>>>>>>>>>> */
 pub fn get_linux_routes() -> Result<RouteTable> {
     use std::process::Command;
 

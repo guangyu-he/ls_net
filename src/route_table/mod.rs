@@ -72,6 +72,22 @@ impl RouteTable {
     }
 }
 
+/// Parses a single line of the route table output and returns a `RouteEntry`.
+///
+/// The function takes a string slice `line` containing the line of the route
+/// table output and an `IpVersion` enum indicating the IP protocol.
+///
+/// The function splits the line into parts using whitespace as a delimiter and
+/// constructs a `RouteEntry` from the parts. The fields of the `RouteEntry` are
+/// populated based on the operating system and IP protocol.
+///
+/// The function returns an `Err` if the line is invalid or if the operating
+/// system is not supported.
+///
+/// # Errors
+///
+/// If the line is invalid or if the operating system is not supported, the
+/// function returns an error.
 fn parse_route_line(line: &str, ip_version: IpVersion) -> Result<RouteEntry> {
     let parts: Vec<&str> = line.split_whitespace().collect();
 

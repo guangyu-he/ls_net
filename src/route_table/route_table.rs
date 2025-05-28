@@ -5,6 +5,20 @@ use crate::route_table::linux::get_linux_routes;
 use crate::route_table::mac::get_macos_routes;
 use crate::route_table::{IpVersion, RouteEntry, RouteTable};
 
+/// Finds the maximum length of a given field in a vector of `RouteEntry`s.
+///
+/// Given a vector of `RouteEntry`s and the name of a field, this function
+/// returns the maximum length of that field in all of the `RouteEntry`s. If
+/// the field is not present in any of the `RouteEntry`s, it returns 0.
+///
+/// # Arguments
+///
+/// * `routes`: The vector of `RouteEntry`s to search.
+/// * `field`: The name of the field to search for.
+///
+/// # Return
+///
+/// The maximum length of the field.
 fn get_max_len(routes: &Vec<RouteEntry>, field: &str) -> usize {
     routes
         .iter()
@@ -13,16 +27,30 @@ fn get_max_len(routes: &Vec<RouteEntry>, field: &str) -> usize {
         .unwrap_or(0)
 }
 
-/// Gets the system's route table using the `route`, `netstat`, or `ip`
-/// commands, depending on the operating system.
+/// Prints the system's route table to stdout.
 ///
-/// On Windows, the `route print` command is used. On macOS, the `netstat -nr`
-/// command is used. On other operating systems, the `ip route` command is used.
+/// On Windows, this function simply executes the `route print` command and
+/// prints the output to stdout. On other platforms, it uses the
+/// `get_macos_routes` or `get_linux_routes` functions to get the route table and
+/// prints it to stdout.
 ///
-/// The output of the command is printed to the console, and the exit status of
-/// the command is returned. If the command fails, an error is returned.
+/// The `protocol` argument can be either "ipv4", "ipv6", or "all". If "all" is
+/// specified, the function prints both the IPv4 and IPv6 routes. If "ipv4" or
+/// "ipv6" is specified, the function only prints the routes for that protocol.
+///
+/// The function prints the routes in a fixed-width format, with each field
+/// aligned to the maximum length of that field in the route table.
+///
+/// If the function encounters an error while executing the command or getting
+/// the route table, it returns an error.
+///
+/// # Errors
+///
+/// If the function encounters an error while executing the command or getting
+/// the route table, it returns an error.
 pub fn get_route_table(protocol: &str) -> Result<()> {
     if cfg!(target_os = "windows") {
+        // TODO! parse not implemented
         return match Command::new("route").args(&["print"]).output() {
             Ok(output) => {
                 if output.status.success() {

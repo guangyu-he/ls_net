@@ -7,7 +7,7 @@ cross-platform way to inspect your machine's network configuration with simple c
 
 - List all network interfaces and their IP addresses
 - Show the main IP address of the machine
-- Display the system's routing table
+- Display the system's routing table and default gateway
 - Filter interfaces by protocol: IPv4, IPv6, or both
 - Colorized output for readability
 
@@ -37,6 +37,12 @@ cross-platform way to inspect your machine's network configuration with simple c
 cargo install --git https://github.com/guangyu-he/ls_net
 ```
 
+### from crates.io
+
+```sh
+cargo install ls_net
+```
+
 ## Usage
 
 ```sh
@@ -63,7 +69,7 @@ for all protocols
 ls_net -p all
 ```
 
-## Output Example
+## Output Example (on MacOS)
 
 ```
 Local Network Interfaces and IP Addresses
@@ -73,16 +79,19 @@ eth0      : 192.168.1.100
 lo        : 127.0.0.1
 ...
 ============================================
-Route table:
-Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-0.0.0.0        192.168.1.1     0.0.0.0         UG    100    0        0 eth0
+Found x network interfaces (displaying x)
+
+================ IPv4 Routes ================
+Destination        Gateway             Flags      Netif    Expire
+0.0.0.0            192.168.1.1         UGSC       0.0.0.0     
 ...
+================ IPv4 Default Gateway ================
+IPv4 Default Gateway: 192.168.1.1 via en0
 ```
 
 ## Platform Support
 
-- **macOS:** Uses `netstat -nr` for route table
-- **Linux:** Uses `ip route`
+- **macOS** and **Linux:** Uses `netstat -nr` for route table
 - **Windows:** Uses `route print`
 
 ## Dependencies

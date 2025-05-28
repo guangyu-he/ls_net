@@ -60,6 +60,11 @@ pub fn display_ip_interfaces(protocol: &str) -> Result<()> {
     let mut displayed_count = 0;
     let len_interfaces = sorted_interfaces.len();
 
+    println!(
+        "{}",
+        "=============================================".green()
+    );
+
     // Display all interfaces and IP addresses
     for interface in sorted_interfaces {
         // Filter by protocol if specified
@@ -97,7 +102,10 @@ pub fn display_ip_interfaces(protocol: &str) -> Result<()> {
         displayed_count += 1;
     }
 
-    println!("{}", "============================================".green());
+    println!(
+        "{}",
+        "=============================================".green()
+    );
     println!(
         "Found {} network interfaces (displaying {})",
         len_interfaces, displayed_count

@@ -149,7 +149,7 @@ pub fn get_route_table(protocol: &str) -> Result<()> {
             }
             println!(
                 "{}",
-                "============ IPv4 Default Gateway ============".green()
+                "============ IPv4 Default Gateway ===========".green()
             );
             if let Some(ipv4_gateway) = route_table.get_default_gateway(IpVersion::IPv4) {
                 println!(
@@ -162,30 +162,85 @@ pub fn get_route_table(protocol: &str) -> Result<()> {
         }
 
         if protocol == "ipv6" || protocol == "all" {
-            println!("\n================ IPv6 Routes ================");
+            println!(
+                "{}",
+                "================ IPv6 Routes ================".green()
+            );
             for route in &route_table.ipv6_routes {
                 println!(
-                    "{:} {:} {:10} {:8} {:}",
+                    "{} {} {} {} {}",
                     format!(
                         "{:width$}",
-                        route.destination,
+                        {
+                            let route = &route.destination;
+                            if route == "Destination" {
+                                route.blue().bold()
+                            } else {
+                                route.yellow()
+                            }
+                        },
                         width = get_max_len(&route_table.ipv6_routes, "destination")
                     ),
                     format!(
                         "{:width$}",
-                        route.gateway,
+                        {
+                            let gateway = &route.gateway;
+                            if gateway == "Gateway" {
+                                gateway.blue().bold()
+                            } else {
+                                gateway.normal()
+                            }
+                        },
                         width = get_max_len(&route_table.ipv6_routes, "gateway") + 2
                     ),
-                    route.flags,
-                    route.iface,
-                    route.clone().expire.unwrap_or("".to_string())
+                    format!(
+                        "{:width$}",
+                        {
+                            let flags = &route.flags;
+                            if flags == "Flags" {
+                                flags.blue().bold()
+                            } else {
+                                flags.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv6_routes, "flags") + 2
+                    ),
+                    format!(
+                        "{:width$}",
+                        {
+                            let iface = &route.iface;
+                            if iface == "Iface" || iface == "Netif" {
+                                iface.blue().bold()
+                            } else {
+                                iface.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv6_routes, "iface") + 2
+                    ),
+                    format!(
+                        "{:width$}",
+                        {
+                            let expire = &route.clone().expire.unwrap_or("".to_string());
+                            if expire == "Expire" {
+                                expire.blue().bold()
+                            } else {
+                                expire.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv6_routes, "expire")
+                    )
                 );
             }
-            println!("================ IPv6 Default Gateway ================");
+            println!(
+                "{}",
+                "============ IPv6 Default Gateway ===========".green()
+            );
             if let Some(ipv6_gateway) = route_table.get_default_gateway(IpVersion::IPv6) {
                 println!(
-                    "IPv6 Default Gateway: {} via {}",
-                    ipv6_gateway.gateway, ipv6_gateway.iface
+                    "{}{} via {}\n",
+                    "IPv6 Default Gateway: ".blue().bold(),
+                    ipv6_gateway.gateway.yellow(),
+                    ipv6_gateway.iface.bold()
                 );
             }
         }

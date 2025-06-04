@@ -1,6 +1,6 @@
 [package]
 name = "ls_net"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "A CLI tool for displaying local network interfaces, IP addresses and routes."
 authors = ["Guangyu He <fredhgy2010@gmail.com>"]

@@ -1,4 +1,5 @@
 use anyhow::{Result, anyhow};
+use colored::Colorize;
 use std::process::Command;
 
 use crate::route_table::linux::get_linux_routes;
@@ -75,31 +76,87 @@ pub fn get_route_table(protocol: &str) -> Result<()> {
             return Err(anyhow!("Unsupported operating system"));
         }
 
+        println!("{}", "\nLocal Network Routes Table".green().bold());
         if protocol == "ipv4" || protocol == "all" {
-            println!("\n================ IPv4 Routes ================");
+            println!(
+                "{}",
+                "================ IPv4 Routes ================".green()
+            );
             for route in &route_table.ipv4_routes {
                 println!(
-                    "{} {:15} {:10} {:8} {}",
+                    "{} {} {} {} {}",
                     format!(
                         "{:width$}",
-                        route.destination,
+                        {
+                            let route = &route.destination;
+                            if route == "Destination" {
+                                route.blue().bold()
+                            } else {
+                                route.yellow()
+                            }
+                        },
                         width = get_max_len(&route_table.ipv4_routes, "destination")
                     ),
                     format!(
                         "{:width$}",
-                        route.gateway,
+                        {
+                            let gateway = &route.gateway;
+                            if gateway == "Gateway" {
+                                gateway.blue().bold()
+                            } else {
+                                gateway.normal()
+                            }
+                        },
                         width = get_max_len(&route_table.ipv4_routes, "gateway") + 2
                     ),
-                    route.flags,
-                    route.iface,
-                    route.clone().expire.unwrap_or("".to_string())
+                    format!(
+                        "{:width$}",
+                        {
+                            let flags = &route.flags;
+                            if flags == "Flags" {
+                                flags.blue().bold()
+                            } else {
+                                flags.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv4_routes, "flags") + 2
+                    ),
+                    format!(
+                        "{:width$}",
+                        {
+                            let iface = &route.iface;
+                            if iface == "Iface" || iface == "Netif" {
+                                iface.blue().bold()
+                            } else {
+                                iface.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv4_routes, "iface") + 2
+                    ),
+                    format!(
+                        "{:width$}",
+                        {
+                            let expire = &route.clone().expire.unwrap_or("".to_string());
+                            if expire == "Expire" {
+                                expire.blue().bold()
+                            } else {
+                                expire.normal()
+                            }
+                        },
+                        width = get_max_len(&route_table.ipv4_routes, "expire")
+                    )
                 );
             }
-            println!("================ IPv4 Default Gateway ================");
+            println!(
+                "{}",
+                "============ IPv4 Default Gateway ============".green()
+            );
             if let Some(ipv4_gateway) = route_table.get_default_gateway(IpVersion::IPv4) {
                 println!(
-                    "IPv4 Default Gateway: {} via {}",
-                    ipv4_gateway.gateway, ipv4_gateway.iface
+                    "{}{} via {}\n",
+                    "IPv4 Default Gateway: ".blue().bold(),
+                    ipv4_gateway.gateway.yellow(),
+                    ipv4_gateway.iface.bold()
                 );
             }
         }

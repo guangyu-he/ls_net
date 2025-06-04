@@ -58,20 +58,20 @@ pub fn parse_macos_route_output(output: &str) -> Result<RouteTable> {
     Ok(route_table)
 }
 
-    /// Executes the `netstat -rn` command on macOS and parses its output into a
-    /// `RouteTable`.
-    ///
-    /// The function executes the `netstat -rn` command, which prints the system's
-    /// route table to stdout. It then parses the output with
-    /// `parse_macos_route_output` and returns the resulting `RouteTable`.
-    ///
-    /// If an error occurs while executing the command or parsing the output,
-    /// the function returns an error.
-    ///
-    /// # Errors
-    ///
-    /// If an error occurs while executing the command or parsing the output,
-    /// the function returns an error.
+/// Executes the `netstat -rn` command on macOS and parses its output into a
+/// `RouteTable`.
+///
+/// The function executes the `netstat -rn` command, which prints the system's
+/// route table to stdout. It then parses the output with
+/// `parse_macos_route_output` and returns the resulting `RouteTable`.
+///
+/// If an error occurs while executing the command or parsing the output,
+/// the function returns an error.
+///
+/// # Errors
+///
+/// If an error occurs while executing the command or parsing the output,
+/// the function returns an error.
 pub fn get_macos_routes() -> Result<RouteTable> {
     use std::process::Command;
 
